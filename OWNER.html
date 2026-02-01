@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>zephrine</title>
+        <meta name="description" content="money will come to those who dare.">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                background-color: #121212; 
+                color: #fff;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                overflow: hidden; 
+                position: relative;
+            }
+
+            #particle-canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+            
+            /* KOTAK HITAM DIHAPUS DI SINI */
+            .profile-card {
+                width: 100%;
+                max-width: 450px;
+                background: transparent; 
+                backdrop-filter: none;
+                border-radius: 12px;
+                overflow: hidden;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .profile-info {
+                text-align: center;
+                padding: 0 20px 20px; 
+            }
+            
+            .avatar-container {
+                display: inline-block;
+                border-radius: 50%;
+                padding: 4px;
+                background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+                margin-top: 30px;
+                margin-bottom: 20px; 
+            }
+            
+            .avatar {
+                width: 130px;
+                height: 130px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 4px solid #121212; 
+                display: block;
+            }
+            
+            .profile-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px; 
+            }
+            
+            .name {
+                font-size: 2.2rem;
+                font-weight: 700;
+                margin-right: 10px;
+                text-shadow: 2px 2px 10px rgba(0,0,0,0.5); /* Tambah shadow biar teks kebaca */
+            }
+            
+            .verified-badge {
+                color: #0095f6;
+                font-size: 1.5rem;
+            }
+            
+            .profile-bio {
+                color: #ccc;
+                font-size: 1.1rem;
+                margin-bottom: 25px; 
+                line-height: 1.4;
+                text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            }
+            
+            .links-section {
+                padding: 0 20px 15px; 
+            }
+            
+            .link-item {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.1); /* Agak terang biar kontras */
+                color: #fff;
+                text-decoration: none;
+                padding: 18px;
+                border-radius: 10px; 
+                margin-bottom: 15px; 
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255,255,255,0.1);
+                font-size: 1.1rem;
+                font-weight: 500;
+                backdrop-filter: blur(5px);
+            }
+            
+            .link-item:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: scale(1.02);
+                border-color: #0095f6;
+            }
+            
+            .link-icon {
+                margin-right: 12px;
+                font-size: 1.3rem;
+            }
+
+            .footer-text {
+                text-align: center;
+                color: #888;
+                font-size: 0.9rem;
+                margin-top: 30px;
+                padding-bottom: 20px;
+                z-index: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="particle-canvas"></canvas>
+
+        <div class="profile-card">
+            <div class="profile-info">
+                <div class="avatar-container">
+                    <img src="https://files.catbox.moe/xu7ddv.jpg" alt="Profile" class="avatar">
+                </div>
+                
+                <div class="profile-name">
+                    <h1 class="name">Dp!nz-79</h1>
+                    <span class="verified-badge">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                </div>
+                
+                <p class="profile-bio">Uang akan datang kepada mereka yang berani.</p>
+            </div>
+            
+            <div class="links-section">
+                <a href="https://t.me/andry919" class="link-item">
+                    <i class="fas fa-plug link-icon"></i> Telegram
+                </a>
+                <a href="https://t.me/unknown799997" class="link-item">
+                    <i class="fab fa-telegram link-icon"></i> Saluran Telegram
+                </a>
+                <a href="https://wa.me/6285212227533" class="link-item">
+                    <i class="fab fa-whatsapp link-icon"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <p class="footer-text">Hak Cipta Oleh: @DapinR!iX</p>
+
+        <script>
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function initCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 2 + 1;
+                    this.speedX = (Math.random() - 0.5) * 5; 
+                    this.speedY = (Math.random() - 0.5) * 5; 
+                    this.opacity = Math.random();
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function createParticles() {
+                particles = [];
+                for (let i = 0; i < 100; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                initCanvas();
+                createParticles();
+            });
+
+            initCanvas();
+            createParticles();
+            animate();
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const elements = document.querySelectorAll('.profile-card, .footer-text');
+                elements.forEach((element, index) => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(20px)';
+                    element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 300);
+                });
+            });
+        </script>
+    </body>
+</html>
